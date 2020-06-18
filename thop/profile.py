@@ -2,6 +2,7 @@ from distutils.version import LooseVersion
 
 from thop.vision.basic_hooks import *
 from thop.rnn_hooks import *
+from thop.custom_hooks import *
 
 
 # logger = logging.getLogger(__name__)
@@ -67,12 +68,15 @@ register_hooks = {
     nn.RNN: count_rnn,
     nn.GRU: count_gru,
     nn.LSTM: count_lstm,
+
+    nn.LayerNorm: count_layer_norm,
 }
 
 if LooseVersion(torch.__version__) >= LooseVersion("1.1.0"):
     register_hooks.update({
         nn.SyncBatchNorm: count_bn
     })
+
 
 def profile_origin(model, inputs, custom_ops=None, verbose=True):
     handler_collection = []
